@@ -1,8 +1,8 @@
-
 import practice2
 import requests
 from bs4 import BeautifulSoup
 import webscraping3
+
 
 def get_html_content(url):
     r = requests.get(url)
@@ -30,17 +30,17 @@ def get_html_content(url):
 
 # Below prints out the data for one book along with which category it's in.
 
-full_book_page_html = get_html_content(practice2.full_url_booklist[0][1])
+if __name__ == '__main__':
+    full_book_page_html = get_html_content(practice2.full_url_booklist[0][1])
+    book = webscraping3.Book_Info(full_book_page_html, practice2.full_url_booklist[0][2])
 
-book = webscraping3.Book_Info(full_book_page_html, practice2.full_url_booklist[0][2])
-
-print('Category={}'.format(book.category))
-print(book.Title())
-print(book.Description())
-print(book.UPC())
-print(book.Product_type())
-print(book.Price_excl__tax__())
-print(book.Price_incl__tax__())
-print(book.Tax())
-print(book.Availability())
-print(book.Number_of_reviews())
+    # Populate dictionary with a list of book objects
+    catergory_dict = {}
+    for value in practice2.full_url_booklist:
+        category = value[2]
+        book_html = get_html_content(value[1])
+        book_object = webscraping3.Book_Info(book_html, category)
+        if category not in catergory_dict:
+            catergory_dict[category] = [book_object]
+        else:
+            catergory_dict[category].append(book_object)
